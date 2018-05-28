@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+   db:
+     image: mysql:5.7
+     volumes:
+       - db_data:/var/lib/mysql
+     networks:
+       - backend
+     restart: always
+     environment:
+       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+       MYSQL_DATABASE: wordpress
+       MYSQL_USER: ${MYSQL_DATABASE_USER}
+       MYSQL_PASSWORD: ${MYSQL_DATABASE_PASSWORD}
+
+   wordpress:
+     image: wordpress:latest
+     networks:
+       - backend
+       - frontend
+     ports:
+       - "80"
+     restart: always
+     volumes:
+       - wp_content:/var/www/html/wp-content 
+     depends_on:
+       - db
+     environment:
+       WORDPRESS_DB_HOST: db:3306
+       WORDPRESS_DB_USER: ${MYSQL_DATABASE_USER}
+       WORDPRESS_DB_PASSWORD: ${MYSQL_DATABASE_PASSWORD}
+
+   phpmyadmin:
+     image: phpmyadmin/phpmyadmin
+     networks:
+       - backend
+       - frontend
+     ports:
+       - "80"
+     restart: always
+     depends_on:
+       - db
+     environment:
+       PMA_HOST: db:3306
+       PMA_USER: ${MYSQL_DATABASE_USER}
+       PMA_PASSWORD: ${MYSQL_DATABASE_PASSWORD}
+
+networks:
+  backend:
+  frontend:
+  
+volumes:
+    db_data:
+    wp_content:
