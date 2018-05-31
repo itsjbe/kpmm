@@ -1,1 +1,1 @@
-docker run --rm --name kptar -v ~/db_backup:/tmp/kp/wp_content -v kpmm_stack_wp_content:/tmp/kp/to-backup:ro ubuntu tar -cjvf /tmp/kp/wp_content/wp_content.tar.bz2 -C /tmp/kp/to-backup .
+docker run --rm --name kptar -v $(pwd):/tmp/out -v kpmm_stack_wp_content:/tmp/to-backup:ro ubuntu tar -cjvf /tmp/out/wp_content.tar.bz2 -C /tmp/to-backup .
